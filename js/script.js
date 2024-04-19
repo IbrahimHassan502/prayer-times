@@ -1,6 +1,8 @@
 "use strict";
 const form = document.querySelector("form");
 const formInputs = form.querySelectorAll("input[type='text'");
+const city = form.querySelector("#city");
+const country = form.querySelector("#country");
 const calcMethod = document.querySelector("#calc-method");
 const formButton = document.querySelector("form input[type='submit']");
 const currentDate = new Date();
@@ -133,11 +135,18 @@ function buttonClick() {
   }
 
   // ========== fetching data
-  if (formInputs[0].value && formInputs[1].value) {
+  if (city.value && country.value) {
+    console.log(
+      `https://api.aladhan.com/v1/calendarByCity/${currentDate.getFullYear()}/${
+        currentDate.getMonth() + 1
+      }?city=${city.value.trim()}&country=${country.value.trim()}&method=${
+        parseInt(calcMethod.value) + 1 || 1
+      }`
+    );
     fetch(
       `https://api.aladhan.com/v1/calendarByCity/${currentDate.getFullYear()}/${
         currentDate.getMonth() + 1
-      }?city=${formInputs[0].value.trim()}&country=${formInputs[1].value.trim()}&method=${
+      }?city=${city.value.trim()}&country=${country.value.trim()}&method=${
         parseInt(calcMethod.value) + 1 || 1
       }`
     )
