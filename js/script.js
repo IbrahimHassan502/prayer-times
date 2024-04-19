@@ -114,6 +114,8 @@ function countDown(timings, index) {
     // ========== reseting the timer to show the next prayer
     if (timerTimeDifference <= 1000) {
       clearInterval(timer);
+      closestPrayerHours.innerHTML = "00";
+      closestPrayerMinutes.innerHTML = "00";
       closestPrayerSeconds.innerHTML = "00";
       countDown(timings, ++index);
       azanAudio.play();
