@@ -1,13 +1,10 @@
 "use strict";
+const timingsToShow = ["Fajr", "Sunrise", "Dhuhr", "Asr", "Maghrib", "Isha"];
+
 const form = document.querySelector("form");
 const formInputs = form.querySelectorAll("input[type='text'");
 const city = form.querySelector("#city");
 const country = form.querySelector("#country");
-const calcMethod = document.querySelector("#calc-method");
-const formButton = document.querySelector("form input[type='submit']");
-const currentDate = new Date();
-const timingsSpans = document.querySelectorAll("span.timing");
-const timingsToShow = ["Fajr", "Sunrise", "Dhuhr", "Asr", "Maghrib", "Isha"];
 const calcMethods = [
   "Muslim World League",
   "Islamic Society of North America",
@@ -33,6 +30,8 @@ const calcMethods = [
   "Comunidate Islamica de Lisboa (Portugal)",
 ];
 
+const timingsSpans = document.querySelectorAll("span.timing");
+
 const closestPrayerName = document.querySelector(".closest-prayer .name");
 const closestPrayerHours = document.querySelector(".closest-prayer .hours");
 const closestPrayerMinutes = document.querySelector(".closest-prayer .minutes");
@@ -45,6 +44,7 @@ const azanAudio = document.querySelector("audio");
 /* ============================================================================
 ========== function to generate select options
 ============================================================================ */
+const calcMethod = document.querySelector("#calc-method");
 (function generateSelect() {
   const fragment = new DocumentFragment();
   calcMethods.forEach((method, index) => {
@@ -125,24 +125,18 @@ function countDown(timings, index) {
 ========== main function that fetches the data and shows it
 ============================================================================ */
 function buttonClick() {
+  // clear the closest prayer time in order not to have more than timer flashing over each other in case user enters another data
   if (timer) {
     clearInterval(timer);
   }
+  // clearing error span
   const errorSpans = form.querySelectorAll(".error-span");
-
   if (errorSpans[0]) {
     [...errorSpans].forEach((span) => span.remove());
   }
-
+  const currentDate = new Date();
   // ========== fetching data
   if (city.value && country.value) {
-    console.log(
-      `https://api.aladhan.com/v1/calendarByCity/${currentDate.getFullYear()}/${
-        currentDate.getMonth() + 1
-      }?city=${city.value.trim()}&country=${country.value.trim()}&method=${
-        parseInt(calcMethod.value) + 1 || 1
-      }`
-    );
     fetch(
       `https://api.aladhan.com/v1/calendarByCity/${currentDate.getFullYear()}/${
         currentDate.getMonth() + 1
@@ -172,15 +166,19 @@ function buttonClick() {
           );
           const timeDifference = timingInMS - currentDate.getTime();
           if (timeDifference > 0 && !nextPrayerUpdated) {
+            // making the if false for the up coming prayers to accure the first (closest) prayer time
             nextPrayerUpdated = true;
+            // calling the countdown function
             countDown(timings, index);
           } else if (timeDifference < 0 && index === timings.length - 1) {
             countDown(timings, 0);
           }
         });
+        // making it possible to change the closest prayer after the loop is done in case of user enters another entry ( without this the closest prayer doesn't change when changing the city or the country)
         nextPrayerUpdated = false;
       });
   } else {
+    // calling a function to ask the user to enter a valid city/country depending on which input is empty
     [...formInputs].forEach((input) => {
       input.value || showError(input, input.id);
     });
@@ -190,4 +188,5 @@ function buttonClick() {
 /* ============================================================================
 ========== attaching main data to submit button click eventlistener
 ============================================================================ */
+const formButton = document.querySelector("form input[type='submit']");
 formButton.addEventListener("click", buttonClick);
