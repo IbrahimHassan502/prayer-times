@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>paryer times</title>
+    <link rel="stylesheet" href="./css/style.css" />
+  </head>
+  <body>
+    <div class="container">
+      <form onsubmit="event.preventDefault();" action="" method="get">
+        <input type="text" id="city" placeholder="city" />
+        <input type="text" id="country" placeholder="country" />
+        <select name="calc-method" id="calc-method"></select>
+        <input type="submit" value="show prayer times" />
+      </form>
+
+      <ul class="pray-timings">
+        <li>Fajr <span class="timing">--:--</span></li>
+        <li>Sunrise <span class="timing">--:--</span></li>
+        <li>Dhuhr <span class="timing">--:--</span></li>
+        <li>Asr <span class="timing">--:--</span></li>
+        <li>Maghrib <span class="timing">--:--</span></li>
+        <li>Isha <span class="timing">--:--</span></li>
+      </ul>
+    </div>
+    <div class="closest-prayer">
+      <img src="volume-high-solid.svg" alt="" />
+      time left till <span class="name">fajr</span>
+      <span class="time">
+        <span class="hours">--</span>: <span class="minutes">--</span>:
+        <span class="seconds">--</span>
+      </span>
+    </div>
+    <audio src="azan.mp3" controls></audio>
+    <script src="./js/script.js"></script>
+  </body>
+</html>
